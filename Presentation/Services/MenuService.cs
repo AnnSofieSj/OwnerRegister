@@ -33,9 +33,9 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
             switch (option)
             {
-                case "1":
-                    ShowAllHorses();
-                    break;
+                //case "1":
+                //    ShowAllHorses();
+                //    break;
 
                 case "2":
                     ShowAddNewHorse();
@@ -45,9 +45,9 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
                     ShowAllBreeds();
                     break;
 
-                case "4":
-                    ShowOneBreed();
-                    break;
+                //case "4":
+                //    ShowOneBreed();
+                //    break;
 
                 //case "5":
                 //    ShowDeleteHorse();
@@ -79,16 +79,11 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
 
 
-    private void ShowAllHorses()
-    {
-        MenuTitle("**** Alla hästar registrerade i databasen **** ");
-        
-        
-    }
+
     //private async void ShowOneHorse()
     //{
-    //    var horse = _horsesService.GetOneHorseAsync(Console.ReadLine()!); ;
-    //    Console.WriteLine($"{horse.}");
+    //    var horse = _horsesService.GetOneHorseAsync();
+    
 
     //}
 
@@ -195,22 +190,22 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.ReadKey();
     }
 
-    private async Task ShowOneBreed()   // får inte ihop att hämta en
-    {
-        var breed = await _breedsService.GetBreedAsync(x => x.Id == id);
+    //private async Task ShowOneBreed()   // får inte ihop att hämta en
+    //{
+    //    var breed = await _breedsService.GetBreedAsync(x => x.Id == id);
 
 
-        Console.Clear();
-        Console.WriteLine("Vilken ras vill du visa? : ");
-        var id = Console.ReadLine()!;
+    //    Console.Clear();
+    //    Console.WriteLine("Vilken ras vill du visa? : ");
+    //    var id = Console.ReadLine()!;
 
-        Console.WriteLine($"{} {id}");
-        Console.ReadKey();
-
-
+    //    Console.WriteLine($"{} {id}");
+    //    Console.ReadKey();
 
 
-    }
+
+
+    //}
 
     private void ShowExitApp()
     {

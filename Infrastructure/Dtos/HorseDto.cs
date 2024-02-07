@@ -12,6 +12,9 @@ public class HorseDto
 
 
     public List<BreedsDto> Breeds { get; set; } = new List<BreedsDto>();
+    public List<OwnersDto> Owners { get; set; } = new List<OwnersDto>();
+    public List<BreedersDto> Breeders { get; set; } = new List<BreedersDto>();
+    public List<AddressesDto> Addresses { get; set; } = new List<AddressesDto>();
 
     //public BreedsDto? Breeds { get; set; }
     //public BreedersDto? Breeders { get; set; }

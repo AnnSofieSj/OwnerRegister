@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Services;
 
-public class HorsesService(HorsesRepository horsesRepository, BreedsRepository breedsRepository, OwnersRepository ownersRepository, AddressesRepository addressesRepository, BreedersRepository breedersRepository, BreedsService breedsService)
+public class HorsesService(HorsesRepository horsesRepository, BreedsRepository breedsRepository, OwnersRepository ownersRepository, AddressesRepository addressesRepository, BreedersRepository breedersRepository, BreedsService breedsService, BreedersService breedersService, OwnersService ownersService, AddressesService addressesService)
 {
     private readonly HorsesRepository _horsesRepository = horsesRepository;
     private readonly BreedsRepository _breedsRepository = breedsRepository;
@@ -17,6 +17,9 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
     private readonly AddressesRepository _addressesRepository = addressesRepository;
     private readonly BreedersRepository _breedersRepository = breedersRepository;
     private readonly BreedsService _breedsService = breedsService;
+    private readonly BreedersService _breedersService = breedersService;
+    private readonly OwnersService _ownersService = ownersService;
+    private readonly AddressesService _addressesService = addressesService;
 
 
     public async Task<bool> AddHorseAsync(AddHorseDto addHorse)
@@ -61,11 +64,11 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
         return false;
     }
 
-    public async Task<HorseDto> GetOneHorseAsync(int registrationId) //Ej klar
+    public async Task<HorseDto> GetOneHorseAsync(Expression<Func<HorsesEntity, bool>> expression) //Ej klar
     {
         try
         {
-            var horseEntity = await _horsesRepository.GetOneAsync(x => x.RegistrationId == registrationId);
+            var horseEntity = await _horsesRepository.GetOneAsync(expression);
 
             if (horseEntity != null)
             {
@@ -75,20 +78,52 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
                     HorseName = horseEntity.HorseName,
                     Gender = horseEntity.Gender,
                     YearOfBirth = horseEntity.YearOfBirth,
-                    Color = horseEntity.Color,                                    
-                   
+                    Color = horseEntity.Color,                                  
                 };
 
 
-                foreach (var breeds in horseDto.Breeds) 
+                foreach (var breed in horseEntity.Breeds) //varför hittar den inte i horseEntity? Hittar om jag sätter horseDto, men är det rätt?
                 {
                     horseDto.Breeds.Add(new BreedsDto
                     {
-                        Id = breeds.Id,
-                        NameOfBreed = breeds.NameOfBreed,
+                        Id = breed.Id,
+                        NameOfBreed = breed.NameOfBreed
                     });               
                 }
-               
+
+                foreach( var owner in horseDto.Owners)
+                {
+                    horseDto.Owners.Add(new OwnersDto
+                    {
+                        Id= owner.Id,
+                        FirstName = owner.FirstName,
+                        LastName = owner.LastName,
+                        Email = owner.Email
+                    });
+                }
+
+                foreach (var breeder in horseDto.Breeders)
+                {
+                    horseDto.Breeders.Add(new BreedersDto
+                    {
+                        Id = breeder.Id,
+                        FirstName = breeder.FirstName,
+                        LastName = breeder.LastName,
+                        Email = breeder.Email
+                    });
+                }
+
+                foreach (var address in horseDto.Addresses)
+                {
+                    horseDto.Addresses.Add(new AddressesDto
+                    {
+                        Id = address.Id,
+                        Street = address.Street,
+                        StreetNr = address.StreetNr,
+                        PostalCode = address.PostalCode,
+                        City = address.City
+                    });
+                }
 
                 return horseDto;
             }
