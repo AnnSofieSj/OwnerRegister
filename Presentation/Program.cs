@@ -1,7 +1,5 @@
 ﻿
 using Infrastructure.Contexts;
-using Infrastructure.Dtos;
-using Infrastructure.Entities;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +18,12 @@ var builder = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddScoped<HorsesRepository>();
     services.AddScoped<OwnersRepository>();
 
+    services.AddScoped<HorsesService>();
     services.AddScoped<BreedsService>();
+    services.AddScoped<BreedersService>();
+    services.AddScoped<OwnersService>();
+    services.AddScoped<AddressesService>();
+
     services.AddSingleton<MenuService>();
 
 
@@ -29,16 +32,6 @@ var builder = Host.CreateDefaultBuilder().ConfigureServices(services =>
 builder.Start();
 
 var menuService = builder.Services.GetRequiredService<MenuService>();
-menuService.AddNewBreed();
+menuService.ShowMainMenu();
 Console.ReadKey();
 
-//var breedsService = builder.Services.GetRequiredService<BreedsService>();
-//await breedsService.CreateBreedAsync("Connemara");
-
-
-
-
-
-
-
-//Console.ReadKey();

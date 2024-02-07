@@ -93,5 +93,29 @@ public class OwnersService(OwnersRepository ownersRepository)
 
     }
 
+    public async Task<OwnersDto> UpdateOwnerAsync(OwnersDto updatedOwner)
+    {
+        try
+        {
+            var entity = await _ownersRepository.GetOneAsync(x => x.Id == updatedOwner.Id);
+            if (entity != null)
+            {
+                entity.FirstName = updatedOwner.FirstName!;
+                entity.LastName = updatedOwner.LastName!;
+                entity.Email = updatedOwner.Email!;
 
+                var result = await _ownersRepository.UpdateAsync(entity);
+                if (result != null)
+                    return new OwnersDto { Id = entity.Id, FirstName = entity.FirstName, LastName = entity.LastName, Email = entity.Email };
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return null!;
+
+
+    }
 }

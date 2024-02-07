@@ -93,4 +93,29 @@ public class BreedersService(BreedersRepository breedersRepository)
 
     }
 
+    public async Task<BreedersDto> UpdateBreederAsync(BreedersDto updatedBreeder)
+    {
+        try
+        {
+            var entity = await _breedersRepository.GetOneAsync(x => x.Id == updatedBreeder.Id);
+            if (entity != null)
+            {
+                entity.FirstName = updatedBreeder.FirstName!;
+                entity.LastName = updatedBreeder.LastName!;
+                entity.Email = updatedBreeder.Email!;
+
+                var result = await _breedersRepository.UpdateAsync(entity);
+                if (result != null)
+                    return new BreedersDto { Id = entity.Id, FirstName = entity.FirstName, LastName = entity.LastName, Email = entity.Email };
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return null!;
+
+    }
+
 }

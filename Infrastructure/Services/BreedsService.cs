@@ -4,6 +4,7 @@ using Infrastructure.Dtos;
 using Infrastructure.Entities;
 using Infrastructure.Repositories;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 
 
@@ -33,7 +34,8 @@ public class BreedsService(BreedsRepository breedsRepository)
         }
         return false;
     }
-    
+
+
     public async Task<BreedsDto> GetBreedAsync(Expression<Func<BreedsEntity, bool>> expression)
     {
         try
@@ -75,6 +77,28 @@ public class BreedsService(BreedsRepository breedsRepository)
                         NameOfBreed = breedsEntity.NameOfBreed
                     });
                     return list;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return null!;
+    }
+
+    public async Task<BreedsDto> UpdateBreedAsync(BreedsDto updatedBreed)
+    {
+        try
+        {
+            var entity = await _breedsRepository.GetOneAsync(x => x.Id == updatedBreed.Id);
+            if (entity != null)
+            {
+                entity.NameOfBreed = updatedBreed.NameOfBreed!;
+
+                var result = await _breedsRepository.UpdateAsync(entity);
+                if (result != null)
+                    return new BreedsDto { Id = entity.Id, NameOfBreed = entity.NameOfBreed };
+
             }
         }
         catch (Exception ex)

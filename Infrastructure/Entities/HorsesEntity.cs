@@ -40,6 +40,12 @@ public class HorsesEntity
     [ForeignKey(nameof(OwnersEntity))]
     public int OwnerId { get; set; }
 
+    [Required]
+    [ForeignKey(nameof(AddressesEntity))]
+    public int AddressId { get; set; }
+
+
+
 
     public virtual BreedsEntity Breed { get; set; } = null!;
 

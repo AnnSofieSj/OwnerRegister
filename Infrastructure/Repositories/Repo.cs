@@ -57,18 +57,13 @@ public abstract class Repo<TEntity> where TEntity : class
         return null!;
     }
 
-    public virtual async Task<TEntity> UpdateAsync(Expression<Func<TEntity, bool>> expression, TEntity updatedEntity)
+    public virtual async Task<TEntity> UpdateAsync(TEntity entity)
     {
         try
-        {
-            var existingEntity = await _context.Set<TEntity>().FirstOrDefaultAsync(expression);
-            if (existingEntity != null)
-            {
-                _context.Entry(existingEntity).CurrentValues.SetValues(updatedEntity);
-                await _context.SaveChangesAsync();
-
-                return existingEntity;
-            }
+        {           
+            _context.Set<TEntity>().Update(entity);
+            await _context.SaveChangesAsync();
+            return entity;             
         }
         catch (Exception ex) { Debug.WriteLine("Error :: " + ex.Message); }
         return null!;

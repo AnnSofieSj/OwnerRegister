@@ -24,8 +24,7 @@ public class AddressesService(AddressesRepository addressesrepository)
                     Street = address.Street,                
                     StreetNr = address.StreetNr,
                     PostalCode = address.PostalCode,
-                    City = address.City
-                  
+                    City = address.City                  
                 });
 
                 if (addressEntity != null)
@@ -66,5 +65,30 @@ public class AddressesService(AddressesRepository addressesrepository)
         return null!;
     }
 
+    public async Task<AddressesDto> UpdateAddressAsync(AddressesDto updatedAddress)
+    {
+        try
+        {
+            var entity = await _addressesrepository.GetOneAsync(x => x.Id == updatedAddress.Id);
+            if (entity != null)
+            {
+                entity.Street = updatedAddress.Street!;
+                entity.StreetNr = updatedAddress.StreetNr!;
+                entity.PostalCode = updatedAddress.PostalCode!;
+                entity.City = updatedAddress.City!;
+
+                var result = await _addressesrepository.UpdateAsync(entity);
+                if (result != null)
+                    return new AddressesDto { Id = entity.Id, Street = entity.Street, StreetNr = entity.StreetNr, PostalCode = entity.PostalCode, City = entity.City };
+
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return null!;
+
+    }
 
 }
