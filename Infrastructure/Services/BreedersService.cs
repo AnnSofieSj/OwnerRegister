@@ -118,4 +118,19 @@ public class BreedersService(BreedersRepository breedersRepository)
 
     }
 
+    public async Task<bool> DeleteBreederAsync(Expression<Func<BreedersEntity, bool>> expression)
+    {
+        try
+        {
+            var result = await _breedersRepository.DeleteAsync(expression);
+            return result;
+        }
+
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return false;
+    }
+
 }

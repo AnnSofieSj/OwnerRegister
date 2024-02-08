@@ -91,4 +91,19 @@ public class AddressesService(AddressesRepository addressesrepository)
 
     }
 
+    public async Task<bool> DeleteAddressAsync(Expression<Func<AddressesEntity, bool>> expression)
+    {
+        try
+        {
+            var result = await _addressesrepository.DeleteAsync(expression);
+            return result;
+        }
+
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return false;
+    }
+
 }

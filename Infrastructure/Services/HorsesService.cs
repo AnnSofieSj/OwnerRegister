@@ -64,68 +64,27 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
         return false;
     }
 
-    public async Task<HorseDto> GetOneHorseAsync(Expression<Func<HorsesEntity, bool>> expression) //Ej klar
+    public async Task<IEnumerable<HorseDto>> GetAllHorsesAsync()
     {
         try
         {
-            var horseEntity = await _horsesRepository.GetOneAsync(expression);
-
-            if (horseEntity != null)
+            var horseEntities = await _horsesRepository.GetAllAsync();
+            if (horseEntities != null)
             {
-                var horseDto = new HorseDto
-                {
-                    RegistrationId = horseEntity.RegistrationId,
-                    HorseName = horseEntity.HorseName,
-                    Gender = horseEntity.Gender,
-                    YearOfBirth = horseEntity.YearOfBirth,
-                    Color = horseEntity.Color,                                  
-                };
-
-
-                foreach (var breed in horseEntity.Breeds) //varför hittar den inte i horseEntity? Hittar om jag sätter horseDto, men är det rätt?
-                {
-                    horseDto.Breeds.Add(new BreedsDto
+                var list = new List<HorseDto>();
+                foreach (var horseEntity in horseEntities)
+                    list.Add(new HorseDto
                     {
-                        Id = breed.Id,
-                        NameOfBreed = breed.NameOfBreed
-                    });               
-                }
-
-                foreach( var owner in horseDto.Owners)
-                {
-                    horseDto.Owners.Add(new OwnersDto
-                    {
-                        Id= owner.Id,
-                        FirstName = owner.FirstName,
-                        LastName = owner.LastName,
-                        Email = owner.Email
+                        RegistrationId = horseEntity.RegistrationId,
+                        HorseName = horseEntity.HorseName,
+                        Gender = horseEntity.Gender,
+                        YearOfBirth= horseEntity.YearOfBirth,
+                        Color = horseEntity.Color,                        
                     });
-                }
-
-                foreach (var breeder in horseDto.Breeders)
-                {
-                    horseDto.Breeders.Add(new BreedersDto
-                    {
-                        Id = breeder.Id,
-                        FirstName = breeder.FirstName,
-                        LastName = breeder.LastName,
-                        Email = breeder.Email
-                    });
-                }
-
-                foreach (var address in horseDto.Addresses)
-                {
-                    horseDto.Addresses.Add(new AddressesDto
-                    {
-                        Id = address.Id,
-                        Street = address.Street,
-                        StreetNr = address.StreetNr,
-                        PostalCode = address.PostalCode,
-                        City = address.City
-                    });
-                }
-
-                return horseDto;
+                   
+                foreach (var breed in horseEntities. )
+                return list;
+                
             }
         }
         catch (Exception ex)
@@ -133,27 +92,103 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
             Debug.WriteLine("Error :: " + ex.Message);
         }
         return null!;
-
-
     }
 
 
-    public async Task<HorseDto> UpdateHorseAsync(HorseDto updatedHorse)
-    {
-        try
-        {
-            var entity = await _horsesRepository.GetOneAsync(x => x.RegistrationId == updatedHorse.RegistrationId);
-            if (entity != null)
-            {
-                var breedDto = await _breedsService.CreateBreedAsync(); //why????
 
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine("Error :: " + ex.Message);
-        }
-        return null!;
 
-    }
+
+
+    //public async Task<HorseDto> GetOneHorseAsync(Expression<Func<HorsesEntity, bool>> expression) //Ej klar
+    //{
+    //    try
+    //    {
+    //        var horseEntity = await _horsesRepository.GetOneAsync(expression);
+
+    //        if (horseEntity != null)
+    //        {
+    //            var horseDto = new HorseDto
+    //            {
+    //                RegistrationId = horseEntity.RegistrationId,
+    //                HorseName = horseEntity.HorseName,
+    //                Gender = horseEntity.Gender,
+    //                YearOfBirth = horseEntity.YearOfBirth,
+    //                Color = horseEntity.Color,                                  
+    //            };
+
+
+    //            foreach (var breed in horseEntity.Breeds) //varför hittar den inte i horseEntity? Hittar om jag sätter horseDto, men är det rätt?
+    //            {
+    //                horseDto.Breeds.Add(new BreedsDto
+    //                {
+    //                    Id = breed.Id,
+    //                    NameOfBreed = breed.NameOfBreed
+    //                });               
+    //            }
+
+    //            foreach( var owner in horseDto.Owners)
+    //            {
+    //                horseDto.Owners.Add(new OwnersDto
+    //                {
+    //                    Id= owner.Id,
+    //                    FirstName = owner.FirstName,
+    //                    LastName = owner.LastName,
+    //                    Email = owner.Email
+    //                });
+    //            }
+
+    //            foreach (var breeder in horseDto.Breeders)
+    //            {
+    //                horseDto.Breeders.Add(new BreedersDto
+    //                {
+    //                    Id = breeder.Id,
+    //                    FirstName = breeder.FirstName,
+    //                    LastName = breeder.LastName,
+    //                    Email = breeder.Email
+    //                });
+    //            }
+
+    //            foreach (var address in horseDto.Addresses)
+    //            {
+    //                horseDto.Addresses.Add(new AddressesDto
+    //                {
+    //                    Id = address.Id,
+    //                    Street = address.Street,
+    //                    StreetNr = address.StreetNr,
+    //                    PostalCode = address.PostalCode,
+    //                    City = address.City
+    //                });
+    //            }
+
+    //            return horseDto;
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.WriteLine("Error :: " + ex.Message);
+    //    }
+    //    return null!;
+
+
+    //}
+
+
+    //public async Task<HorseDto> UpdateHorseAsync(HorseDto updatedHorse)
+    //{
+    //    try
+    //    {
+    //        var entity = await _horsesRepository.GetOneAsync(x => x.RegistrationId == updatedHorse.RegistrationId);
+    //        if (entity != null)
+    //        {
+    //            var breedDto = await _breedsService.CreateBreedAsync(updatedHorse.Breeds.); //why????
+    //            var ownerDto = await _ownersService.CreateOwnersAsync(updatedHorse.);
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Debug.WriteLine("Error :: " + ex.Message);
+    //    }
+    //    return null!;
+
+    //}
 }

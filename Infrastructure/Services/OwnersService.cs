@@ -115,7 +115,20 @@ public class OwnersService(OwnersRepository ownersRepository)
             Debug.WriteLine("Error :: " + ex.Message);
         }
         return null!;
+    }
 
+    public async Task<bool> DeleteOwnerAsync(Expression<Func<OwnersEntity, bool>> expression)
+    {
+        try
+        {
+            var result = await _ownersRepository.DeleteAsync(expression);
+            return result;
+        }
 
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return false;
     }
 }
