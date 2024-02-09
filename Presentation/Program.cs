@@ -24,7 +24,7 @@ var builder = Host.CreateDefaultBuilder().ConfigureServices(services =>
     services.AddScoped<OwnersService>();
     services.AddScoped<AddressesService>();
 
-    services.AddSingleton<MenuService>();
+    services.AddScoped<MenuService>();
 
 
 
@@ -32,6 +32,6 @@ var builder = Host.CreateDefaultBuilder().ConfigureServices(services =>
 builder.Start();
 
 var menuService = builder.Services.GetRequiredService<MenuService>();
-menuService.ShowMainMenu();
+await menuService.ShowMainMenu();
 Console.ReadKey();
 

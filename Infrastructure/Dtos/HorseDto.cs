@@ -9,26 +9,23 @@ public class HorseDto
     public string Gender { get; set; } = null!;
     public string YearOfBirth { get; set; } = null!;
     public string? Color { get; set; }
+    public string? Picture { get; set; }
+
+    public string NameOfBreed { get; set; } = null!;
+
+    public string BreederFirstName { get; set; } = null!;
+    public string BreederLastName { get; set; } = null!;
+    public string BreederEmail { get; set; } = null!;
+
+    public string OwnerFirstName { get; set; } = null!;
+    public string OwnerLastName { get; set; } = null!;
+    public string OwnerEmail { get; set; } = null!;
+
+    public string Street { get; set; } = null!;
+    public string StreetNr { get; set; } = null!;
+    public string PostalCode { get; set; } = null!;
+    public string City { get; set; } = null!;
 
 
-    public List<BreedsDto> Breeds { get; set; } = new List<BreedsDto>();
-    public List<OwnersDto> Owners { get; set; } = new List<OwnersDto>();
-    public List<BreedersDto> Breeders { get; set; } = new List<BreedersDto>();
-    public List<AddressesDto> Addresses { get; set; } = new List<AddressesDto>();
-
-    //public BreedsDto? Breeds { get; set; }
-    //public BreedersDto? Breeders { get; set; }
-    //public OwnersDto? Owners { get; set; }
-    //public AddressesDto? Addresses { get; set; }
-
-
-    //public string NameOfBreed { get; set; } = null!;
-
-    //public string OwnerFirstName { get; set; } = null!;
-    //public string OwnerLastName { get; set; } = null!;
-    //public string City { get; set; } = null!;
-
-    //public string BreederFirstName { get; set; } = null!;
-    //public string BreederLastName { get; set; } = null!;
 
 }

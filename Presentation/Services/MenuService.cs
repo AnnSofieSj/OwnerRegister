@@ -13,7 +13,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
     private readonly BreedersService _breedersService = breedersService;
     private readonly AddressesService _addressesService = addressesService;
 
-    public void ShowMainMenu()
+    public async Task ShowMainMenu()
     {
         while (true)
         {
@@ -36,44 +36,44 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
             switch (option)
             {
                 case "1":
-                    ShowAllHorses();
+                    await ShowAllHorses();
                     break;
 
                 //case "2":
-                //    ShowOneHorse();
+                //    await ShowOneHorse();
                 //    break;
 
                 case "3":
-                    ShowAddNewHorse();
+                    await ShowAddNewHorse();
                     break;
 
-                //case "4":
-                //    ShowUpdateHorse(); 
-                //    break;
+                case "4":
+                    await ShowUpdateHorse();
+                    break;
 
                 //case "5":
-                //    ShowDeleteHorse();
+                //    await ShowDeleteHorse();
                 //    break;
 
                 case "6":
-                    ShowOwnerBreederMenu();
+                    await ShowOwnerBreederMenu();
                     break;
 
                 case "7":
-                    ShowExitApp();
+                    await ShowExitApp();
                     break;
 
                 case "8":
-                    AddNewBreed();
+                    await AddNewBreed();
                     break;
 
                 case "9":
-                    ShowAllBreeds();
+                    await ShowAllBreeds();
                     break;
 
-                //case "4":
-                //    ShowOneBreed();
-                //    break;
+                case "10":
+                    await ShowOneBreed();
+                    break;
 
                 default:
                     Console.WriteLine("Ogiltigt val. Tryck på valfri knapp för att välja igen.");
@@ -90,7 +90,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
 
 
-    private void ShowOwnerBreederMenu()
+    private async Task ShowOwnerBreederMenu()
     {
         while (true)
         {
@@ -111,26 +111,27 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
             switch (option)
             {
                 case "1":
-                    ShowUpdateOwner();
+                    await ShowUpdateOwner();
                     break;
                 case "2":
-                    ShowUpdateBreeder();
+                    await ShowUpdateBreeder();
                     break;
                 case "3":
-                    ShowDeleteOwner();
+                    await ShowDeleteOwner();
                     break;
                 case "4":
-                    ShowDeleteBreeder();
+                    await ShowDeleteBreeder();
                     break;
                 case "5":
-                    ShowMainMenu();
+                    await ShowMainMenu();
                     break;
             }
         }
 
     }
-    private async void ShowAllHorses() 
-    { 
+    private async Task ShowAllHorses() 
+    {
+        Console.Clear();
         var horses = await _horsesService.GetAllHorsesAsync();
         Console.Clear();
         Console.WriteLine();
@@ -140,11 +141,16 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         foreach (var horse in horses)
         {
             Console.WriteLine($"Registreringsnummer: {horse.RegistrationId} Namn: {horse.HorseName} Kön: {horse.Gender} Färg: {horse.Color} ");
+            Console.WriteLine($"Ras: {horse.NameOfBreed}");
+            Console.WriteLine($"Uppfödare: {horse.BreederFirstName} {horse.BreederLastName}");
+            Console.WriteLine($"Ägare: {horse.OwnerFirstName} {horse.OwnerLastName}, {horse.City}");
         }
         Console.ReadKey();
+        await ShowMainMenu();
+
     }
 
-    private async void ShowAddNewHorse()
+    private async Task ShowAddNewHorse()
     {
         var newHorse = new AddHorseDto();
 
@@ -221,7 +227,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
     } //Färdig
 
-    private async void AddNewBreed() //TEST
+    private async Task AddNewBreed() //TEST
     {
         var breed = new BreedsDto();
 
@@ -233,7 +239,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.ReadKey();
     }
 
-    private async void ShowAllBreeds()
+    private async Task ShowAllBreeds()
     {
 
         var breeds = _breedsService.GetAllBreedsAsync();
@@ -247,22 +253,20 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.ReadKey();
     }
 
-    private void ShowOneBreed()   // får inte ihop att hämta en
+    private async Task ShowOneBreed() 
     {
         Console.Clear();
-        Console.WriteLine("Vilken ras vill du visa? Ang Id : ");
-        var id = Console.ReadLine()!;
-        //var breed = await _breedsService.GetBreedAsync(/*x => x.Id == id*/);
+        Console.Write("Vilken ras vill du visa? Ang ras : ");
+        var nameOfBreed = Console.ReadLine()!;
+        var breed = await _breedsService.GetBreedAsync(x => x.NameOfBreed == nameOfBreed);
 
-        //Console.WriteLine($"{breed.id} ");
+        Console.WriteLine($"{breed.Id}: {breed.NameOfBreed} ");
         Console.ReadKey();
-
-
-
+        ShowMainMenu();
 
     }
 
-    private void ShowExitApp()
+    private async Task ShowExitApp()
     {
         Console.Clear();
         Console.Write("Är du säker på att du vill avsluta programmet? (J - ja / N - nej): ");
@@ -275,7 +279,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         }
         else
         {
-            ShowMainMenu();
+            await ShowMainMenu();
         }
     } //Färdig
 
@@ -286,9 +290,79 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.WriteLine();
     } //Färdig
 
+    private async Task ShowUpdateHorse()
+    {
+        var updateHorse = new HorseDto();
+        Console.Clear();
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.Write("Ange Id på hästen du vill uppdatera: ");
+        updateHorse.RegistrationId = int.Parse(Console.ReadLine()!);
+        Console.Write("Hästens namn : ");
+        updateHorse.HorseName = Console.ReadLine()!;
+        updateHorse.HorseName = char.ToUpper(updateHorse.HorseName[0]) + updateHorse.HorseName.Substring(1);
+
+        Console.Write("Hästens kön : ");
+        updateHorse.Gender = Console.ReadLine()!;
+        updateHorse.Gender = char.ToUpper(updateHorse.Gender[0]) + updateHorse.Gender.Substring(1);
+
+        Console.Write("Hästens födelseår : ");
+        updateHorse.YearOfBirth = Console.ReadLine()!;
+
+        Console.Write("Hästens färg (frivilligt) : ");
+        updateHorse.Color = Console.ReadLine()!;
+        updateHorse.Color = char.ToUpper(updateHorse.Color[0]) + updateHorse.Color.Substring(1);
+
+        Console.Write("Länk till bild (frivilligt) : ");
+        updateHorse.Picture = Console.ReadLine()!;
+
+        Console.Write("Hästens ras : ");
+        updateHorse.NameOfBreed = Console.ReadLine()!;
+        updateHorse.NameOfBreed = char.ToUpper(updateHorse.NameOfBreed[0]) + updateHorse.NameOfBreed.Substring(1);
+
+        Console.Write("Ägarens förnamn : ");
+        updateHorse.OwnerFirstName = Console.ReadLine()!;
+        updateHorse.OwnerFirstName = char.ToUpper(updateHorse.OwnerFirstName[0]) + updateHorse.OwnerFirstName.Substring(1);
+
+        Console.Write("Ägarens efternamn : ");
+        updateHorse.OwnerLastName = Console.ReadLine()!;
+        updateHorse.OwnerLastName = char.ToUpper(updateHorse.OwnerLastName[0]) + updateHorse.OwnerLastName.Substring(1);
+
+        Console.Write("Ägarens epostadress : ");
+        updateHorse.OwnerEmail = Console.ReadLine()!;
+
+        Console.Write("Ägarens gatuadress : ");
+        updateHorse.Street = Console.ReadLine()!;
+        updateHorse.Street = char.ToUpper(updateHorse.Street[0]) + updateHorse.Street.Substring(1);
+
+        Console.Write("Gatunummer : ");
+        updateHorse.StreetNr = Console.ReadLine()!;
+
+        Console.Write("Postnummer : ");
+        updateHorse.PostalCode = Console.ReadLine()!;
+
+        Console.Write("Stad : ");
+        updateHorse.City = Console.ReadLine()!;
+        updateHorse.City = char.ToUpper(updateHorse.City[0]) + updateHorse.City.Substring(1);
+
+        Console.Write("Uppfödarens förnamn : ");
+        updateHorse.BreederFirstName = Console.ReadLine()!;
+        updateHorse.BreederFirstName = char.ToUpper(updateHorse.BreederFirstName[0]) + updateHorse.BreederFirstName.Substring(1);
+
+        Console.Write("Uppfödarens efternamn : ");
+        updateHorse.BreederLastName = Console.ReadLine()!;
+        updateHorse.BreederLastName = char.ToUpper(updateHorse.BreederLastName[0]) + updateHorse.BreederLastName.Substring(1);
+
+        Console.Write("Uppfödarens epostadress : ");
+        updateHorse.BreederEmail = Console.ReadLine()!;
+
+        await _horsesService.UpdateHorseAsync(updateHorse);
+        Console.ReadKey();
+        await ShowMainMenu();
+    }
 
     //Undermeny Ägare och Uppfödare
-    private async void ShowUpdateOwner()
+    private async Task ShowUpdateOwner()
     {
         var updatedOwner = new OwnersDto();
         Console.Clear();
@@ -308,7 +382,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
     } //Färdig
 
-    private async void ShowUpdateBreeder()
+    private async Task ShowUpdateBreeder()
     {
         var updatedBreeder = new BreedersDto();
         Console.Clear();
@@ -327,12 +401,12 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         await _breedersService.UpdateBreederAsync(updatedBreeder);
     } //Färdig
 
-    private void ShowDeleteOwner()
+    private async Task ShowDeleteOwner()
     {
 
     }
 
-    private void ShowDeleteBreeder()
+    private async Task ShowDeleteBreeder()
     {
 
     }
