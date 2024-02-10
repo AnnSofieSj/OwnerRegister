@@ -79,8 +79,14 @@ public class AddressesService(AddressesRepository addressesrepository)
 
                 var result = await _addressesrepository.UpdateAsync(entity);
                 if (result != null)
-                    return new AddressesDto { Id = entity.Id, Street = entity.Street, StreetNr = entity.StreetNr, PostalCode = entity.PostalCode, City = entity.City };
-
+                    return new AddressesDto 
+                    { 
+                        Id = entity.Id, 
+                        Street = entity.Street, 
+                        StreetNr = entity.StreetNr, 
+                        PostalCode = entity.PostalCode, 
+                        City = entity.City 
+                    };
             }
         }
         catch (Exception ex)
