@@ -30,8 +30,7 @@ public class HorsesEntity
 
     [Required]
     [ForeignKey(nameof(BreedsEntity))]
-    public int BreedId { get; set; }
-    public virtual BreedsEntity Breed { get; set; } = null!;
+    public int BreedId { get; set; }    
 
     [Required]
     [ForeignKey(nameof(BreedersEntity))]
@@ -46,9 +45,7 @@ public class HorsesEntity
     public int AddressId { get; set; }
 
 
-
-
-    
+    public virtual BreedsEntity Breed { get; set; } = null!;
 
     public virtual BreedersEntity Breeder { get; set; } = null!;   
 
