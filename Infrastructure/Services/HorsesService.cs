@@ -9,17 +9,14 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Services;
 
-public class HorsesService(HorsesRepository horsesRepository, BreedsRepository breedsRepository, OwnersRepository ownersRepository, AddressesRepository addressesRepository, BreedersRepository breedersRepository, BreedsService breedsService, BreedersService breedersService, OwnersService ownersService, AddressesService addressesService)
+public class HorsesService(HorsesRepository horsesRepository, BreedsRepository breedsRepository, OwnersRepository ownersRepository, AddressesRepository addressesRepository, BreedersRepository breedersRepository)
 {
     private readonly HorsesRepository _horsesRepository = horsesRepository;
     private readonly BreedsRepository _breedsRepository = breedsRepository;
     private readonly OwnersRepository _ownersRepository = ownersRepository;
     private readonly AddressesRepository _addressesRepository = addressesRepository;
     private readonly BreedersRepository _breedersRepository = breedersRepository;
-    private readonly BreedsService _breedsService = breedsService;
-    private readonly BreedersService _breedersService = breedersService;
-    private readonly OwnersService _ownersService = ownersService;
-    private readonly AddressesService _addressesService = addressesService;
+
 
 
     public async Task<bool> AddHorseAsync(AddHorseDto addHorse)
@@ -209,5 +206,20 @@ public class HorsesService(HorsesRepository horsesRepository, BreedsRepository b
         }
         return null!;
 
+    }
+
+    public async Task<bool> DeleteHorseAsync(Expression<Func<HorsesEntity, bool>> expression)
+    {
+        try
+        {
+            var result = await _horsesRepository.DeleteAsync(expression);
+            return result;
+        }
+
+        catch (Exception ex)
+        {
+            Debug.WriteLine("Error :: " + ex.Message);
+        }
+        return false;
     }
 }

@@ -13,23 +13,22 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
     private readonly BreedersService _breedersService = breedersService;
     private readonly AddressesService _addressesService = addressesService;
 
+    //Huvudmeny
     public async Task ShowMainMenu()
     {
         while (true)
-        {
-            Console.WriteLine();
-            Console.WriteLine();
+        {            
             MenuTitle("****  Välkommen till Hästägarregistret! ****");
+            Console.WriteLine();        
             Console.WriteLine($"{"1.",-3} Visa alla hästar i databasen");
             Console.WriteLine($"{"2.",-3} Visa information om en häst");
             Console.WriteLine($"{"3.",-3} Lägg till ny häst");
             Console.WriteLine($"{"4.",-3} Uppdatera information om en häst");
             Console.WriteLine($"{"5.",-3} Ta bort häst från databasen");
             Console.WriteLine($"{"6.",-3} Hantera information om ägare och uppfödare");
-
-            Console.WriteLine($"{"7.",-3} Avsluta program");
-            Console.WriteLine($"{"8.",-3} Lägg till ras");   //TEST
+            Console.WriteLine($"{"7.",-3} Avsluta program");            
             Console.WriteLine();
+
             Console.Write("Menyval: ");
             var option = Console.ReadLine();
 
@@ -51,9 +50,9 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
                     await ShowUpdateHorse();
                     break;
 
-                //case "5":
-                //    await ShowDeleteHorse();
-                //    break;
+                case "5":
+                    await ShowDeleteHorse();
+                    break;
 
                 case "6":
                     await ShowOwnerBreederMenu();
@@ -61,19 +60,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
 
                 case "7":
                     await ShowExitApp();
-                    break;
-
-                case "8":
-                    await AddNewBreed();
-                    break;
-
-                case "9":
-                    await ShowAllBreeds();
-                    break;
-
-                case "10":
-                    await ShowDeleteBreed();
-                    break;                
+                    break;               
 
                 default:
                     Console.WriteLine("Ogiltigt val. Tryck på valfri knapp för att välja igen.");
@@ -90,10 +77,7 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
     private async Task ShowOwnerBreederMenu()
     {
         while (true)
-        {
-            Console.Clear();
-            Console.WriteLine();
-            Console.WriteLine();
+        {            
             MenuTitle("**** Hantera information om ägare och uppfödare ****");
             Console.WriteLine($"{"1.",-3} Uppdatera information om ägare");
             Console.WriteLine($"{"2.",-3} Uppdatera information om uppfödare");
@@ -101,10 +85,10 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
             Console.WriteLine($"{"4.",-3} Ta bort uppfödare ur registret");
             Console.WriteLine($"{"5.",-3} Tillbaks till huvudmenyn");
             Console.WriteLine();
+
             Console.Write("Menyval: ");
-
-
             var option = Console.ReadLine();
+
             switch (option)
             {
                 case "1":
@@ -126,23 +110,28 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         }
 
     }
+
+    
     private async Task ShowAllHorses() 
     {
+        MenuTitle("**** Alla hästar i registret ****");
         Console.Clear();
         var horses = await _horsesService.GetAllHorsesAsync();
         Console.Clear();
         Console.WriteLine();
-        Console.WriteLine();
-        MenuTitle("**** Alla hästar i registret ****");
+        Console.WriteLine();        
 
         foreach (var horse in horses)
         {
-            Console.WriteLine($"{"*",-2} Registreringsnummer: {horse.RegistrationId} {" ",-2} Namn: {horse.HorseName} ");
-            Console.WriteLine($"{" ",-2} Kön: {horse.Gender} {" ",-2} Färg: {horse.Color} {" ",-2} Ras: {horse.NameOfBreed}");
-            Console.WriteLine($"{" ",-2} Uppfödare: {horse.BreederFirstName} {horse.BreederLastName}");
-            Console.WriteLine($"{" ",-2} Ägare: {horse.OwnerFirstName} {horse.OwnerLastName}, {horse.City}");
+            Console.WriteLine($"{"*",-4} Registreringsnummer: {horse.RegistrationId}");
+            Console.WriteLine($"{" ",-4} Namn: {" ",-14} {horse.HorseName}");            
+            Console.WriteLine($"{" ",-4} Kön: {" ",-15} {horse.Gender}");            
+            Console.WriteLine($"{" ",-4} Ras: {" ",-15} {horse.NameOfBreed}");
+            Console.WriteLine($"{" ",-4} Uppfödare: {" ",-9} {horse.BreederFirstName} {horse.BreederLastName}");
+            Console.WriteLine($"{" ",-4} Ägare: {" ",-13} {horse.OwnerFirstName} {horse.OwnerLastName}");
             Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine("-----------------------------------------------------------------------------------------------");
+            Console.WriteLine();            
         }
         Console.ReadKey();
         await ShowMainMenu();
@@ -150,23 +139,27 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
     
     private async Task ShowOneHorse()
     {
-        Console.Clear();
-        Console.WriteLine();
-        Console.WriteLine();
         MenuTitle("**** Visa information om en häst ****");
         Console.WriteLine();
-        Console.WriteLine("Ange Registreringnummer för den häst som du vill visa");
+        Console.Write("Ange Registreringnummer för den häst som du vill visa: ");
         var id = int.Parse(Console.ReadLine()!);
         var horse = await _horsesService.GetOneHorseAsync(x => x.RegistrationId == id);
 
         Console.Clear();
+        Console.WriteLine("Detaljerad information om en häst");
         Console.WriteLine();
-        Console.WriteLine($"{"*",-2} Registreringsnummer: {horse.RegistrationId} {" ",-2} Namn: {horse.HorseName} ");
-        Console.WriteLine($"{" ",-2} Kön: {horse.Gender} {" ",-2} Färg: {horse.Color}");
-        Console.WriteLine($"{" ",-2} Ras: {horse.NameOfBreed}");
+        Console.WriteLine($"{"*",-4} Registreringsnummer: {horse.RegistrationId}");
+        Console.WriteLine($"{" ",-4} Namn: {" ",-14} {horse.HorseName}");
+        Console.WriteLine($"{" ",-4} Kön: {" ",-15} {horse.Gender}");
+        Console.WriteLine($"{" ",-4} Färg: {" ",-14} {horse.Color}");
+        Console.WriteLine($"{" ",-4} Ras: {" ",-15} {horse.NameOfBreed}");
+        Console.WriteLine($"{" ",-4} Bildlänk: {" ",-10} {horse.Picture}");
         Console.WriteLine();
-        Console.WriteLine($"{" ",-2} Uppfödare: {horse.BreederFirstName} {horse.BreederLastName} ");
-        Console.WriteLine($"{" ",-2} Ägare: {horse.OwnerFirstName} {horse.OwnerLastName}, {horse.City}");
+        Console.WriteLine($"{" ",-4} Uppfödare: {" ",-9} {horse.BreederFirstName} {horse.BreederLastName}");
+        Console.WriteLine($"{" ",-4} E-post: {" ",-12} {horse.BreederEmail}");
+        Console.WriteLine();
+        Console.WriteLine($"{" ",-4} Ägare: {" ",-13} {horse.OwnerFirstName} {horse.OwnerLastName}, {horse.City}");
+        Console.WriteLine($"{" ",-4} E-post: {" ",-12} {horse.OwnerEmail}");
 
         Console.ReadKey();
         await ShowMainMenu();
@@ -177,7 +170,6 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
     {
         var newHorse = new AddHorseDto();
 
-        Console.Clear();
         MenuTitle("**** Registrera ny häst ****");
         Console.WriteLine();
 
@@ -239,63 +231,37 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.Write("Uppfödarens epostadress : ");
         newHorse.BreederEmail = Console.ReadLine()!;
 
+        var result = await _horsesService.AddHorseAsync(newHorse);
+        Console.Clear();
 
-
-        await _horsesService.AddHorseAsync(newHorse);
-
-        Console.WriteLine("Hästen tillagd. Tryck Enter för att komma tillbaks till huvudmenyn.");
-        Console.ReadKey();
-
-
+        if (result == true)
+        {
+            Console.Clear();
+            Console.WriteLine("Hästen sparad!");
+            Console.WriteLine("Tryck enter för att återgå till huvudmenyn.");
+            Console.ReadKey();
+            await ShowMainMenu();
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Något gick fel!");
+            Console.WriteLine("Tryck enter för att återgå till huvudmenyn.");
+            Console.ReadKey();
+            await ShowMainMenu();
+        }      
 
     } //Färdig
-
-    private async Task AddNewBreed() //TEST
-    {
-        var breed = new BreedsDto();
-
-        Console.WriteLine("Rasens namn : ");
-
-
-        await _breedsService.CreateBreedAsync(breed.NameOfBreed = Console.ReadLine()!);
-
-        Console.ReadKey();
-    }
-
-    private async Task ShowAllBreeds()
-    {
-
-        var breeds = _breedsService.GetAllBreedsAsync();
-
-        Console.Clear();
-        Console.WriteLine("Alla raser i databasen");
-        foreach (var breed in await breeds)
-        {
-            Console.WriteLine($" Id: {breed.Id} Ras: {breed.NameOfBreed}");
-        }
-        Console.ReadKey();
-    }
-
-    private async Task ShowOneBreed() 
-    {
-        Console.Clear();
-        Console.Write("Vilken ras vill du visa? Ang ras : ");
-        var nameOfBreed = Console.ReadLine()!;
-        var breed = await _breedsService.GetBreedAsync(x => x.NameOfBreed == nameOfBreed);
-
-        Console.WriteLine($"{breed.Id}: {breed.NameOfBreed} ");
-        Console.ReadKey();
-        await ShowMainMenu();
-
-    }
-    
+      
+         
     private async Task ShowUpdateHorse()
     {
         var updateHorse = new HorseDto();
-        Console.Clear();
-        Console.WriteLine();
+        
+        MenuTitle("**** Uppdatera information om befintlig häst ****");
         Console.WriteLine();        
-        Console.Write("Ange Id på hästen du vill uppdatera: ");
+        Console.WriteLine();        
+        Console.Write("Ange registreringsnummret för hästen du vill uppdatera: ");
         updateHorse.RegistrationId = int.Parse(Console.ReadLine()!);
         Console.Write("Hästens namn : ");
         updateHorse.HorseName = Console.ReadLine()!;
@@ -355,13 +321,44 @@ public class MenuService(BreedsService breedsService, HorsesService horsesServic
         Console.Write("Uppfödarens epostadress : ");
         updateHorse.BreederEmail = Console.ReadLine()!;
 
-        await _horsesService.UpdateHorseAsync(updateHorse);
-
+        var result = await _horsesService.UpdateHorseAsync(updateHorse);
         Console.Clear();
-        Console.WriteLine("Uppdatering sparad!");
-        Console.WriteLine("Tryck enter för att återgå till huvudmenyn.");
-        Console.ReadKey();
-        await ShowMainMenu();
+
+        if (result != null)
+        {
+            Console.Clear();
+            Console.WriteLine("Uppdatering sparad!");
+            Console.WriteLine("Tryck enter för att återgå till huvudmenyn.");
+            Console.ReadKey();
+            await ShowMainMenu();
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Något gick fel!");
+            Console.WriteLine("Tryck enter för att återgå till huvudmenyn.");
+            Console.ReadKey();
+            await ShowMainMenu();
+        }
+    }
+        
+
+    private async Task ShowDeleteHorse()
+    {
+        Console.Clear();
+        Console.Write("Id för häst att ta bort: ");
+        var id = int.Parse(Console.ReadLine()!);
+        var horse = await _horsesService.DeleteHorseAsync(x => x.RegistrationId == id);
+        Console.Clear();
+        if (horse == true)
+        {
+            Console.WriteLine("Häst borttagen");
+        }
+        else
+        {
+            Console.WriteLine("Något gick fel");
+        }
+
     }
 
     private async Task ShowDeleteBreed()
